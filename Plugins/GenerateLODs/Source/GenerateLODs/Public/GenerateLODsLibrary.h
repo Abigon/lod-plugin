@@ -15,11 +15,13 @@ class GENERATELODS_API UGenerateLODsLibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "LODs")
-	static TArray<FEditorScriptingMeshReductionSettings> GetDefaultLODsSetting();
+	static TArray<FEditorScriptingMeshReductionSettings> GetLODsSetting();
+
 
 
 	/*
-	Generate 3-levels LOD for StaticMesh asset in array Meshes
+	Generate LODs from Project Settings (Game / Generate LODs Plugin Settings)
+	If Project Settings empty - Generate 3-levels LOD for StaticMesh asset in array Meshes
 	LOD0:
 	 - PercentTriangles = 1.f;
 	 - ScreenSize = 0.75f;
@@ -41,4 +43,8 @@ private:
 	static void ModifyAssetLODs(UStaticMesh* AssetInstance, TArray<FEditorScriptingMeshReductionSettings> LODSettings);
 	static void RemoveAssetLODs(UStaticMesh* AssetInstance);
 	static void SaveAsset(UObject* AssetInstance);
+
+	static TArray<FEditorScriptingMeshReductionSettings> GetDefaultLODsSetting();
+	static int32 GetMinNumVerticesSettings();
+
 };

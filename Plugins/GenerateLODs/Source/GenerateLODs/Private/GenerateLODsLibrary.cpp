@@ -3,17 +3,21 @@
 
 #include "GenerateLODsLibrary.h"
 #include "EditorStaticMeshLibrary.h"
+#include "GenerateLODSettings.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogGenerateLODs, All, All);
 
 void UGenerateLODsLibrary::ModifyLODsForAssets(TArray<UStaticMesh*> Meshes)
 {
 	if (Meshes.Num() <= 0) return;
-	const auto LODSettings = GetDefaultLODsSetting();
+	const auto LODSettings = GetLODsSetting();
 	for (UStaticMesh* Mesh : Meshes)
 	{
-		ModifyAssetLODs(Mesh, LODSettings);
-		SaveAsset(Mesh);
+		if (Mesh->GetNumVertices(0) >= GetMinNumVerticesSettings())
+		{
+			ModifyAssetLODs(Mesh, LODSettings);
+			SaveAsset(Mesh);
+		}
 	}
 }
 
@@ -63,6 +67,12 @@ void UGenerateLODsLibrary::SaveAsset(UObject* AssetInstance)
 	}
 }
 
+TArray<FEditorScriptingMeshReductionSettings> UGenerateLODsLibrary::GetLODsSetting()
+{
+	TArray<FEditorScriptingMeshReductionSettings> LODsFromSettings = GetDefault<UGenerateLODSettings>()->LODs;
+	return LODsFromSettings.Num() > 0 ? LODsFromSettings : GetDefaultLODsSetting();
+}
+
 TArray<FEditorScriptingMeshReductionSettings> UGenerateLODsLibrary::GetDefaultLODsSetting()
 {
 	TArray<FEditorScriptingMeshReductionSettings> ReductionSettings;
@@ -84,4 +94,9 @@ TArray<FEditorScriptingMeshReductionSettings> UGenerateLODsLibrary::GetDefaultLO
 	ReductionSettings.Add(Settings);
 
 	return ReductionSettings;
+}
+
+int32 UGenerateLODsLibrary::GetMinNumVerticesSettings()
+{
+	return GetDefault<UGenerateLODSettings>()->MinNumVertices;
 }

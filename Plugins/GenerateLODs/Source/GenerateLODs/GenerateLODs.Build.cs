@@ -25,7 +25,7 @@ public class GenerateLODs : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", "EditorScriptingUtilities",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,7 +38,8 @@ public class GenerateLODs : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore", 
-				"EditorScriptingUtilities"
+				"EditorScriptingUtilities",
+				"DeveloperSettings"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
